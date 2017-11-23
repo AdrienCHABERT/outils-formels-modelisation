@@ -1,6 +1,8 @@
 import PetriKit
 import PhilosophersLib
 
+// Adrien Chabert
+
 do {
     enum C: CustomStringConvertible {
         case b, v, o

@@ -1,5 +1,7 @@
 extension PredicateNet {
 
+// Adrien Chabert
+
     /// Returns the marking graph of a bounded predicate net.
     public func markingGraph(from marking: MarkingType) -> PredicateMarkingNode<T>? {
 
