@@ -61,7 +61,7 @@ do {
 do {
 //Question 1 :
   let philosophers = lockFreePhilosophers(n: 5)
-  print("Modèle à 5 philosophes sans blocage : ")
+  print("Modèle à 5 philosophes sans bloquage : ")
   let markingGraphLockFree = philosophers.markingGraph(from: philosophers.initialMarking!)
   print("On obtient : ",markingGraphLockFree!.count, " marquages possibles.")
   // On verifie qu'on a pas de bloquage.
