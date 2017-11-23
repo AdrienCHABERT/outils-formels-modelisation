@@ -1,7 +1,10 @@
 import PetriKit
 
+<<<<<<< HEAD
 // Adrien Chabert
 
+=======
+>>>>>>> 2c3313f512f5b80773522eeb89bc8e8cbca58ef8
 public extension PTNet {
 
     public func coverabilityGraph(from marking: CoverabilityMarking) -> CoverabilityGraph {
@@ -15,6 +18,7 @@ public extension PTNet {
         // print debug information you'll write in that function will NOT be taken into account to
         // evaluate your homework.
 
+<<<<<<< HEAD
         // La problématique de ce TP est le fait qu'on ne peut pas tirer une transition d'un graphe de couverture avec la fonction fire.
         // Ainsi j'ai choisi d'utiliser deux fonction qui permettent de transformer un graphe de couverture en PTMarking et inversément.
 
@@ -101,4 +105,9 @@ public extension PTNet {
         }
       return marquage // Retourne le graphe de marquage
     }
+=======
+        return CoverabilityGraph(marking: marking)
+    }
+
+>>>>>>> 2c3313f512f5b80773522eeb89bc8e8cbca58ef8
 }
