@@ -1,22 +1,26 @@
 import PetriKit
 
-<<<<<<< HEAD
 // Adrien Chabert
 
-=======
->>>>>>> 2c3313f512f5b80773522eeb89bc8e8cbca58ef8
 public extension PTNet {
 
+    /// Computes the coverability graph of this P/T-net, starting from the given marking.
+    ///
+    /// Implementation note:
+    /// It is easier to build the coverability graph in a recursive depth-first manner than with
+    /// stacks, because we need to keep track of predecessor nodes as we process new ones. That's
+    /// why the algorithm is actually implemented in `computeSuccessors(of:_:_:)`.
     public func coverabilityGraph(from marking: CoverabilityMarking) -> CoverabilityGraph {
-        // Write here the implementation of the coverability graph generation.
+        // Create the initial node of the coverability graph.
+        let initialNode = CoverabilityGraph(marking: marking)
 
-        // Note that CoverabilityMarking implements both `==` and `>` operators, meaning that you
-        // may write `M > N` (with M and N instances of CoverabilityMarking) to check whether `M`
-        // is a greater marking than `N`.
+        // An array of `CoverabilityGraph` instances that keeps track of the nodes we've already
+        // visited. It initially contains the initial node of the coverability graph.
+        var seen = [initialNode]
 
-        // IMPORTANT: Your function MUST return a valid instance of CoverabilityGraph! The optional
-        // print debug information you'll write in that function will NOT be taken into account to
-        // evaluate your homework.
+        // Compute the successors of the initial node. Notice that we pass a reference to the array
+        // of visited nodes, and an initially empty array of predecessors.
+        self.computeSuccessors(of: initialNode, seen: &seen, predecessors: [])
 
 <<<<<<< HEAD
         // La problématique de ce TP est le fait qu'on ne peut pas tirer une transition d'un graphe de couverture avec la fonction fire.
@@ -105,8 +109,6 @@ public extension PTNet {
         }
       return marquage // Retourne le graphe de marquage
     }
-=======
-        return CoverabilityGraph(marking: marking)
     }
 
 >>>>>>> 2c3313f512f5b80773522eeb89bc8e8cbca58ef8
