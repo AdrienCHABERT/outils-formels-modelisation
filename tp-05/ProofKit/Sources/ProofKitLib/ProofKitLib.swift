@@ -1,5 +1,7 @@
 infix operator =>: LogicalDisjunctionPrecedence
 
+// Adrien Chabert
+
 public protocol BooleanAlgebra {
 
     static prefix func ! (operand: Self) -> Self
@@ -70,17 +72,109 @@ public enum Formula {
         }
     }
 
+// !!!!!!!!!!!!!!!!!!!!!!!! FUNCTION POUR AVOIR UNE DNF. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     /// The disjunctive normal form of the formula.
     public var dnf: Formula {
-        // Write your code here ...
-        return self
-    }
+      //J'ai utilisé l'algortithme du cours pour avoir une formule sous forme DNF.
+      //etape 1 : enlever les implications
+      //etape 2 : distribuer les négations
+      //étape 3 : distribuer les conjunctions pour avoir des minternes avec des disjunctions entre eux.
 
+        var f = self
+        f = f.nnf //etape 1 et etape 2 (nnf supprime également les implications.)
+        f = f.etape3dnf //etape3
+        // On a une formule sous forme DNF.
+        return f
+    }
+    public var etape3dnf: Formula {
+      // Fonction permettant de distribuer les négations afin d'avoir une formule sous forme CNF.
+          switch self {
+          case .proposition(_):
+              return self
+          case .negation(_):
+              return self
+          case .disjunction(let b, let c): //On cherche à avoir que des minternes à coté des disjunctions.
+              return b.etape3dnf || c.etape3dnf
+          case .conjunction(let b, let c): //On cherche à distribuer la conjunction seulement si on a au moins une disjunction dans b ou dans c.
+
+              switch c {
+              case .disjunction(let d, let e): //Si on a une disjunction directe dans c.
+                return (b && d).etape3dnf || (b && e).etape3dnf
+              default: break
+              }
+              switch b {
+              case .disjunction(let d, let e): //Si on a une disjunction directe dans b.
+                return (d && c).etape3dnf || (e && c).etape3dnf
+              default: break
+              }
+              switch c.etape3dnf { //Si on a une disjunction dans c, mais quelle est pas toute suite là. On doit s'occuper de c avant. exemple : (a && (b && (c || a)))
+              case .disjunction(_,_):
+                return (b.etape3dnf && c.etape3dnf).etape3dnf
+              default: break
+              }
+              switch b.etape3dnf { //Si on a une disjunction dans b, mais quelle est pas toute suite là. On doit s'occuper de b avant.
+              case .disjunction(_,_):
+                return (b.etape3dnf && c.etape3dnf).etape3dnf
+              default: break
+              }
+              return self
+          case .implication(_,_):
+              return self
+    }
+  }
+
+  // !!!!!!!!!!!!!!!!!!!!!!!! FUNCTION POUR AVOIR UNE CNF. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     /// The conjunctive normal form of the formula.
     public var cnf: Formula {
-        // Write your code here ...
-        return self
-    }
+      //J'ai utilisé l'algortithme du cours pour avoir une formule sous forme CNF.
+      //etape 1 : enlever les implications
+      //etape 2 : distribuer les négations
+      //étape 3 : distribuer les disjunctions pour avoir des maxternes et des conjunctions entre eux.
+        var f = self
+        f = f.nnf //etape 1 et etape 2 (nnf supprime également les implications.)
+        f = f.etape3cnf //etape3
+        // On a une formule sous forme CNF.
+        return f
+      }
+
+  public var etape3cnf: Formula {
+    // Fonction permettant de distribuer les négations afin d'avoir une formule sous forme CNF.
+        switch self {
+        case .proposition(_):
+            return self
+        case .negation(_):
+            return self
+        case .disjunction(let b, let c): //On cherche à distribuer la disjunction seulement si on a une conjunction dans b ou dans c.
+            switch c {
+            case .conjunction(let d, let e): //Si on a une conjunction directe dans c.
+              return (b || d).etape3cnf && (b || e).etape3cnf
+            default:
+              break
+            }
+            switch b {
+            case .conjunction(let d, let e): //Si on a une conjunction directe dans b.
+              return (d || c).etape3cnf && (e || c).etape3cnf
+            default:
+              break
+            }
+            switch c.etape3cnf { //Si on a une conjunction dans c, mais quelle est pas toute suite là. On doit s'occuper de c avant. exemple : (a || (b || (c && a)))
+            case .conjunction(_,_):
+              return (b.etape3cnf || c.etape3cnf).etape3cnf
+            default: break
+            }
+            switch b.etape3cnf { //Si on a une conjunction dans b, mais quelle est pas toute suite là. On doit s'occuper de b avant.
+            case .conjunction(_,_):
+              return (b.etape3cnf || c.etape3cnf).etape3cnf
+            default: break
+            }
+            return self
+
+        case .conjunction(let b, let c): //On cherche à avoir que des maxternes à coté des conjunction.
+            return b.etape3cnf && c.etape3cnf
+        case .implication(_,_):
+            return self
+  }
+}
 
     /// The propositions the formula is based on.
     ///
